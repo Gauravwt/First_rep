@@ -1,0 +1,143 @@
+1) Navigation Codes
+->
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+
+namespace WinFormsApp8
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+        SqlConnection con;
+        SqlDataAdapter da;
+        DataSet ds;
+        int i;
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            SqlConnection cn = new SqlConnection("Trusted_Connection=Yes;database=Flash; server=VDILEWVPNTH195");
+            da = new SqlDataAdapter("select * from dept", con);
+            ds = new DataSet();
+            da.Fill(ds);
+        }
+        void getdata()
+        {
+            if ((i >= 0) && (i < ds.Tables[0].Rows.Count))
+            {
+                textBox1.Text = ds.Tables[0].Rows[i][0].ToString();
+                textBox2.Text = ds.Tables[0].Rows[i][1].ToString();
+                textBox3.Text = ds.Tables[0].Rows[i][2].ToString();
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            i++; //next record
+            getdata();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            i--; //previous record
+            getdata();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            i = ds.Tables[0].Rows.Count - 1; //last record
+            getdata();
+        }
+    }
+
+}
+
+2) Picture Box
+->using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+using System.Data.SqlClient;
+
+namespace WinFormsApp12
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog OD = new OpenFileDialog();
+            OD.FileName = "";
+            OD.Filter = "Supported Images|*.jpeg;*.jpg;*.png";
+            if (OD.ShowDialog() == DialogResult.OK)
+                pictureBox1.Load(OD.FileName);
+        }
+        string ConnectionString = " Data Source = VDILEWVPNTH195; Initial Catalog = Flash; Integrated Security = True";
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            SqlConnection con = new SqlConnection(ConnectionString);
+            con.Open();
+            SqlCommand command = con.CreateCommand();
+            var image = new ImageConverter().ConvertTo(pictureBox1.Image, typeof(Byte[]));
+            command.Parameters.AddWithValue("@image", image);
+            command.CommandText = "Insert into student_1(image) values (@image)";
+            if (command.ExecuteNonQuery() > 0)
+                MessageBox.Show("Image was added");
+            else
+                MessageBox.Show("Image was not added");
+        }
+    }
+}
+
+3) ComboBox
+->
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace WindowsFormsApp18
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            comboBox1.Items.Add(textBox1.Text);
+        }
+    }
+}
